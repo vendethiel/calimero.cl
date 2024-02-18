@@ -1,3 +1,4 @@
+
 (in-package :cl-user)
 (defpackage :calimero
   (:use :cl)

@@ -18,6 +18,7 @@
                #:closer-mop ; MOP compat layer
                #:trivial-types ; More types
                #:defstar ; Proper typed definitions <https://github.com/lisp-maintainers/defstar>
+               #:nclasses
                #:fn ; Lambda macros
                #:for ; Iteration library <https://shinmera.github.io/for>
                #:fset ; Collection library <http://www.ergy.com/FSet.html>
@@ -26,14 +27,20 @@
                #:named-readtables ; Isolated readtables
                #:str ; String helpers
                #:trivia ; Pattern matching
-               #:cl-readline ; Readline bindings
+               ;#:cl-readline ; Readline bindings
+               #:metabang-bind
+               #:cl-reexport ; Brings in `cl-reexport:reexport-from' that's useful for custom stdlib-like packages
                )
 
   ;; Project stucture.
   :serial t
   :components ((:module "src"
                         :serial t
-                        :components ((:file "repl")
+                        :components ((:file "myclass")
+                                     (:file "command")
+                                     (:file "plugin")
+                                     (:file "plugin-sh")
+                                     (:file "repl")
                                      (:file "calimero"))))
 
   ;; Build a binary:
