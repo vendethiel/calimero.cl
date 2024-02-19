@@ -21,13 +21,14 @@
 
 (defun make-keyword (name) (values (intern (string-upcase name) "KEYWORD")))
 
-(defmacro make@ (class slots)
+(defmacro make@ (class &body slots)
   `(make-instance ,class
                   ,@(mapcan (lambda (slot)
                               (if (consp slot)
                                   ; TODO check if it's if/when/unless or something
-                                  slot
-                                  (list (make-keyword slot) slot)))
+                                  (mapcan (lambda (w) (list (make-keyword w) w))
+                                          slot)
+                                  (list slot)))
                             slots)))
 
 (export '(defclass* make@))

@@ -30,6 +30,7 @@
                ;#:cl-readline ; Readline bindings
                #:metabang-bind
                #:cl-reexport ; Brings in `cl-reexport:reexport-from' that's useful for custom stdlib-like packages
+               #:uiop ; Portable I/O functions
                )
 
   ;; Project stucture.
@@ -39,8 +40,9 @@
                         :components ((:file "myclass")
                                      (:file "command")
                                      (:file "plugin")
-                                     (:file "plugin-sh")
                                      (:file "repl")
+                                     (:file "plugin-sh")
+                                     (:file "loop")
                                      (:file "calimero"))))
 
   ;; Build a binary:

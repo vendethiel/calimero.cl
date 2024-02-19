@@ -2,7 +2,7 @@
 (in-package :cl-user)
 (defpackage :calimero
   (:use :cl)
-  (:import-from :calimero.repl #:start-repl)
+  (:import-from :calimero.loop #:start-repl)
   (:export #:main))
 (in-package :calimero)
 
