@@ -16,20 +16,15 @@
 
 (defun* cmd-echo ((shell repl) parts)
   (lambda (emit)
-    (funcall emit :data (format nil "~{~a~^ ~}~%" parts))
+    (funcall emit :data (format nil "~{~a~^ ~}" parts))
     (dlambda)))
 
 (defun* cmd-cwd ((shell repl) parts)
   (if (not (null parts))
       (error "Cannot have arguments to `cwd'~%"))
   (lambda (emit)
-    (funcall emit :data (format nil "~a~%" (cwd shell)))
+    (funcall emit :data (cwd shell))
     (dlambda)))
-
-;; XXX DSL like
-;(with-input (emit emit-data)
-;  (emit-data "NYI")
-;  ())
 
 (defun* list-directory ((dir pathname) emit)
   (dolist (file (uiop:directory-files dir))
@@ -39,7 +34,7 @@
   (lambda (emit)
     (if (null parts)
        (list-directory (cwd shell) emit)
-       (funcall emit :data "NYI~%"))
+       (funcall emit :data "NYI"))
     (dlambda)))
 
 (defun* cmd-cat ((shell repl) parts)

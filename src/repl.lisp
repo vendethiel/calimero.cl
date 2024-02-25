@@ -6,6 +6,7 @@
   (:import-from :alexandria #:if-let)
   (:import-from :defstar #:defun*)
 
+  (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass*)
   (:import-from :calimero.command #:handle-command)
   (:import-from :calimero.plugin #:plugin #:handler)
@@ -28,7 +29,7 @@
 
 (defun* feed ((shell repl) (line string))
   (let* ((instrs (parse-line line))
-         (output (lambda (&rest xs) (format t "output: ~{~a~^, ~}~%" xs))) ; TODO (:data value)
+         (output (dlambda ((:data data) (format t "~a~%" data))))
          (commands (mapcar
                     (lambda (parts)
                       (block handled
