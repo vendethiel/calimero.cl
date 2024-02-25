@@ -13,7 +13,6 @@
   :depends-on (#:alexandria ; Utils
                #:serapeum ; More utils
                #:access ; Generic access lib
-               #:arrow-macros ; Clojure style macros
                #:cl-punch ; Scala-style lambdas with ^(foo _) <https://github.com/windymelt/cl-punch>
                #:closer-mop ; MOP compat layer
                #:trivial-types ; More types
