@@ -1,7 +1,10 @@
-(in-package :cl-user)
+33M(in-package :cl-user)
 (defpackage :calimero.command
   (:use :cl)
 
+  (:import-from :alexandria #:if-let)
+
+  (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:make@)
 
   (:export :command
@@ -25,8 +28,7 @@
   (make@ 'dynamic-command (name handler)))
 
 (defmethod handle-command ((command dynamic-command) shell args)
-  (funcall (handler command) shell args)
-  t)
+  (funcall (handler command) shell args))
 
 (defclass* nested-command (command)
   ((subcommands :type (proper-list command))))
@@ -37,8 +39,8 @@
 (defmethod handle-command ((command nested-command) shell args)
   (block loop
     (dolist (subcommand (subcommands command))
-      (if (handle-command subcommand shell args)
-          (return-from loop t)))))
+      (if-let (handled (handle-command subcommand shell args))
+              (return-from loop handled)))))
 
 (defclass* prefix-command (command)
   ((prefix :type string)

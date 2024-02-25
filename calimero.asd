@@ -37,7 +37,8 @@
   :serial t
   :components ((:module "src"
                         :serial t
-                        :components ((:file "myclass")
+                        :components ((:file "util")
+                                     (:file "myclass")
                                      (:file "command")
                                      (:file "plugin")
                                      (:file "repl")
