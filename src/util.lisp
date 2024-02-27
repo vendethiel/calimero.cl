@@ -7,6 +7,9 @@
   (:export #:dlambda #:delambda))
 (in-package :calimero.util)
 
+(cl-punch:enable-punch-syntax)
+; TODO defstar:*use-closer-mop?*
+
 (defmacro dlambda (&body body)
   (with-gensyms ((data "data"))
     `(lambda (&rest ,data)

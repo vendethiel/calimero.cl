@@ -14,9 +14,6 @@
   (:export #:repl))
 (in-package :calimero.repl)
 
-(cl-punch:enable-punch-syntax)
-; TODO defstar:*use-closer-mop?*
-
 (defclass* repl ()
   ((plugins nil :type (proper-list plugin))
    (cwd :type pathname)))
