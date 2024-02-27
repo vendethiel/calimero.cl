@@ -39,11 +39,11 @@
          (commands (mapcar
                     (lambda (parts)
                       (restart-case
-                        (block handled
-                          (dolist (plugin (plugins shell))
-                            (if-let (command (handle-command (handler plugin) shell parts))
-                                    (return-from handled command)))
-                          (error 'command-not-found))
+                          (block handled
+                            (dolist (plugin (plugins shell))
+                              (if-let (command (handle-command (handler plugin) shell parts))
+                                      (return-from handled command)))
+                            (error 'command-not-found))
                         (empty-forwarding-command ()
                           :report "Skip this part of the command, act like a forwarding pipe"
                           (lambda (emit)
