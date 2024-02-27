@@ -1,4 +1,4 @@
-33M(in-package :cl-user)
+(in-package :cl-user)
 (defpackage :calimero.command
   (:use :cl)
 
