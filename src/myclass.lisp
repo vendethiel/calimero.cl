@@ -7,7 +7,8 @@
 
 (cl-reexport:reexport-from :nclasses
                            :include
-                           '(:make*))
+                           '(:make*
+                             :defcondition*))
 
 (defmacro defclass* (name supers slots &rest options)
   "`nclasses:define-class' with automatic types and always-dashed predicates."
