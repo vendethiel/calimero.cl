@@ -5,7 +5,7 @@
   (:import-from :uiop)
 
   (:import-from :calimero.myclass #:make@)
-  (:import-from :calimero.repl #:repl #:feed #:command-not-found)
+  (:import-from :calimero.repl #:repl #:feed)
   (:import-from :calimero.plugin-sh #:make-plugin-sh)
 
   (:export #:start-repl))
