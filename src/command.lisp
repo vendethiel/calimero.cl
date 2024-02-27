@@ -37,10 +37,9 @@
   (make@ 'nested-command (name subcommands)))
 
 (defmethod handle-command ((command nested-command) shell args)
-  (block loop
-    (dolist (subcommand (subcommands command))
-      (if-let (handled (handle-command subcommand shell args))
-              (return-from loop handled)))))
+  (dolist (subcommand (subcommands command))
+    (if-let (handled (handle-command subcommand shell args))
+            (return handled))))
 
 (defclass* prefix-command (command)
   ((prefix :type string)

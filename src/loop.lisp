@@ -15,14 +15,13 @@
   (let* ((plugins (list (make-plugin-sh))) ; TODO dynamic plugin loading
          (cwd (uiop:getcwd))
          (shell (make@ 'repl (plugins cwd))))
-    (block loop
-      (do ((i 0 (1+ i)))
-          (nil)
-        (format t "user:~a $ " i)
-        (force-output)
-        (multiple-value-bind (line end) (read-line *standard-input* nil)
-          (if end
-              (return-from loop)
-              (progn
-                (feed shell line)
-                (force-output))))))))
+    (do ((i 0 (1+ i)))
+        (nil)
+      (format t "user:~a $ " i)
+      (force-output)
+      (multiple-value-bind (line end) (read-line *standard-input* nil)
+        (if end
+          (return)
+          (progn
+            (feed shell line)
+            (force-output)))))))
