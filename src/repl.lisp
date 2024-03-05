@@ -2,31 +2,34 @@
 (defpackage :calimero.repl
   (:use :cl)
 
-  (:import-from :cl-syntax #:use-syntax)
-  (:import-from :cl-punch #:punch-syntax)
+  ;(:import-from :cl-syntax #:use-syntax)
+  ;(:import-from :cl-punch #:punch-syntax)
   (:import-from :trivial-types #:proper-list) ; alexandria:proper-list is more for debug purposes
   (:import-from :alexandria #:if-let)
   (:import-from :defstar #:defun*)
 
   (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:defcondition*)
+  (:import-from :calimero.data #:string-data #:string->data #:string-value)
   (:import-from :calimero.command #:handle-command)
   (:import-from :calimero.plugin #:plugin #:handler)
 
   (:export #:repl))
 (in-package :calimero.repl)
 
-(use-syntax punch-syntax)
+;(use-syntax punch-syntax)
 
 (defclass* repl ()
   ((plugins nil :type (proper-list plugin))
    (cwd :type pathname)))
 
 ; TODO proper parsing
+(defun* parse-arguments ((line string))
+  (mapcar #'string->data
+          (str:split " " (str:trim line) :omit-nulls t)))
+
 (defun* parse-line ((line string))
-  (:returns (proper-list (proper-list string)))
-  (mapcar ^(str:split " " (str:trim _) :omit-nulls t)
-          (str:split "|" line)))
+  (mapcar #'parse-arguments (str:split "|" line)))
 
 (defcondition* command-not-found (error)
   ())
@@ -39,7 +42,9 @@
 
 (defun* feed ((shell repl) (line string))
   (let* ((instrs (parse-line line))
-         (output (dlambda ((:data data) (format t "~a~%" data))))
+         (output (dlambda ((:data data)
+                           (if (typep data 'string-data)
+                               (format t "~a~%" (string-value data))))))
          (commands (mapcar
                     (lambda (parts)
                       (restart-case

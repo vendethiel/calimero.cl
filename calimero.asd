@@ -38,6 +38,7 @@
                         :serial t
                         :components ((:file "util")
                                      (:file "myclass")
+                                     (:file "data")
                                      (:file "command")
                                      (:file "plugin")
                                      (:file "repl")

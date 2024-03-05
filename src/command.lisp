@@ -6,6 +6,7 @@
 
   (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:make@)
+  (:import-from :calimero.data #:string-data #:string-value)
 
   (:export :command
            :handle-command
@@ -49,8 +50,9 @@
   (make@ 'prefix-command (name prefix subcommand)))
 
 (defmethod handle-command ((command prefix-command) shell args)
-  (if (string-equal (prefix command) (car args))
-      (handle-command (subcommand command) shell (cdr args))))
+  (let ((fst (car args)))
+    (if (and (typep fst 'string-data) (string-equal (prefix command) (string-value fst)))
+       (handle-command (subcommand command) shell (cdr args)))))
 
 (defun make-simple-command (prefix handler)
   (let ((subcommand (make@ 'dynamic-command (handler))))
