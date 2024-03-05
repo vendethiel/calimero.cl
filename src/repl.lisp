@@ -2,6 +2,8 @@
 (defpackage :calimero.repl
   (:use :cl)
 
+  (:import-from :cl-syntax #:use-syntax)
+  (:import-from :cl-punch #:punch-syntax)
   (:import-from :trivial-types #:proper-list) ; alexandria:proper-list is more for debug purposes
   (:import-from :alexandria #:if-let)
   (:import-from :defstar #:defun*)
@@ -13,6 +15,8 @@
 
   (:export #:repl))
 (in-package :calimero.repl)
+
+(use-syntax punch-syntax)
 
 (defclass* repl ()
   ((plugins nil :type (proper-list plugin))
