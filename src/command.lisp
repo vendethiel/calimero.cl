@@ -19,28 +19,17 @@
 (defclass* command ()
   ((name :type string)))
 
-(defgeneric handle-command (command shell args)
-  (:documentation "Try to handle a command. Returns t if handled, nil if not handled."))
-
 (defclass* dynamic-command (command)
   ((handler)))
 
 (defun make-dynamic-command (name handler)
   (make@ 'dynamic-command (name handler)))
 
-(defmethod handle-command ((command dynamic-command) shell args)
-  (funcall (handler command) shell args))
-
 (defclass* nested-command (command)
   ((subcommands :type (proper-list command))))
 
 (defun make-nested-command (name subcommands)
   (make@ 'nested-command (name subcommands)))
-
-(defmethod handle-command ((command nested-command) shell args)
-  (dolist (subcommand (subcommands command))
-    (if-let (handled (handle-command subcommand shell args))
-            (return handled))))
 
 (defclass* prefix-command (command)
   ((prefix :type string)
@@ -49,11 +38,22 @@
 (defun make-prefix-command (name prefix subcommand)
   (make@ 'prefix-command (name prefix subcommand)))
 
-(defmethod handle-command ((command prefix-command) shell args)
-  (let ((fst (car args)))
-    (if (and (typep fst 'string-data) (string-equal (prefix command) (string-value fst)))
-       (handle-command (subcommand command) shell (cdr args)))))
-
 (defun make-simple-command (prefix handler)
   (let ((subcommand (make@ 'dynamic-command (handler))))
     (make@ 'prefix-command (prefix subcommand))))
+
+(defgeneric handle-command (command shell args)
+  (:documentation "Try to handle a command. Returns t if handled, nil if not handled.")
+
+  (:method ((command dynamic-command) shell args)
+    (funcall (handler command) shell args))
+
+  (:method ((command nested-command) shell args)
+    (dolist (subcommand (subcommands command))
+      (if-let (handled (handle-command subcommand shell args))
+          (return handled))))
+
+  (:method ((command prefix-command) shell args)
+    (let ((fst (car args)))
+      (if (and (typep fst 'string-data) (string-equal (prefix command) (string-value fst)))
+          (handle-command (subcommand command) shell (cdr args))))))
