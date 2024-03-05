@@ -18,7 +18,7 @@
           :reader string-value)))
 
 (defun* string->data ((value string))
-  ;:returns 'string-data ; XXX why does this not work?
+  :returns 'string-data
   (make@ 'string-data (value)))
 
 (defun string-values (parts)
