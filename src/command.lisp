@@ -2,7 +2,8 @@
 (defpackage :calimero.command
   (:use :cl)
 
-  (:import-from :alexandria #:if-let)
+  (:import-from :alexandria #:if-let #:with-gensyms)
+  (:import-from :trivia #:match)
 
   (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:make@)
@@ -13,7 +14,8 @@
            :make-dynamic-command
            :make-nested-command
            :make-prefix-command
-           :make-simple-command))
+           :make-simple-command
+           :cmd :cmd_))
 (in-package :calimero.command)
 
 (defclass* command ()
@@ -57,3 +59,27 @@
     (let ((fst (car args)))
       (if (and (typep fst 'string-data) (string-equal (prefix command) (string-value fst)))
           (handle-command (subcommand command) shell (cdr args))))))
+
+(defmacro cmd (syms &body body)
+  (match syms
+    ((list emit)
+     (with-gensyms (fwd args)
+                                        ; TODO make sure `emit' is `"EMIT"'
+       `(lambda (,fwd)
+          (flet ((,emit (data) (funcall ,fwd :data data)))
+            ,@(butlast body)
+            (lambda (&rest ,args)
+              (match ,args
+                ,@(car (last body))
+
+                ((list* :data _)
+                 nil) ; If the function didn't handle :data, explicitly discard it
+
+                ((list* _)
+                 (funcall ,fwd ,args))))))))
+
+    (_ (error "Proper invocation is `(cmd (emit) ...)'"))))
+
+; Same as cmd, but with an empty match at the end
+(defmacro cmd_ (syms &body body)
+  `(cmd ,syms ,@body ()))

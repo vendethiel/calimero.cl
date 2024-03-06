@@ -11,7 +11,7 @@
   (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:make@)
   (:import-from :calimero.data #:string->data #:string-values)
-  (:import-from :calimero.command #:make-simple-command #:make-nested-command)
+  (:import-from :calimero.command #:make-simple-command #:make-nested-command #:cmd #:cmd_)
   (:import-from :calimero.plugin #:plugin)
   (:import-from :calimero.repl #:repl #:cwd)
 
@@ -20,26 +20,24 @@
 
 (defun* cmd-echo ((shell repl) parts)
   (let ((parts-string (string-values parts)))
-    (lambda (emit)
+    (cmd_ (emit)
       (line-up-last
        parts
        string-values
        (format nil "~{~a~^ ~}")
        string->data
-       (funcall emit :data))
-      (dlambda))))
+       emit))))
 
 (defun* cmd-cwd ((shell repl) parts)
   (if (not (null parts))
       (error "Cannot have arguments to `cwd'~%"))
-  (lambda (emit)
+  (cmd_ (emit)
     (line-up-last
      shell
      cwd
      namestring
      string->data
-     (funcall emit :data))
-    (dlambda)))
+     emit)))
 
 (defun* list-directory ((dir pathname) emit)
   (dolist (file (uiop:directory-files dir))
@@ -47,19 +45,17 @@
      file
      namestring
      string->data
-     (funcall emit :data))))
+     (funcall emit))))
 
 (defun* cmd-ls ((shell repl) parts)
-  (lambda (emit)
+  (cmd_ (emit)
     (if (null parts)
-       (list-directory (cwd shell) emit)
-       (funcall emit :data (string->data "NYI")))
-    (dlambda)))
+        (list-directory (cwd shell) #'emit)
+        (emit (string->data "NYI")))))
 
 (defun* cmd-cat ((shell repl) parts)
-  (lambda (emit)
-    (dlambda
-     ((:data data) (funcall emit :data data)))))
+  (cmd (emit)
+    (((list :data data) (emit data)))))
 
 (defun make-handler ()
   (let ((subcommands
