@@ -27,3 +27,16 @@
                 (string-value part)
                 (error "Echo can only print string(s)")))
           parts))
+
+
+(defclass* array-data (data)
+  ((elements :reader array-elements)))
+
+(defclass* table-data (data)
+  ((pairs :reader table-pairs)))
+
+(defun* table-keys ((table table-data))
+  nil)
+
+(defun* table-values ((table table-data))
+  nil)
