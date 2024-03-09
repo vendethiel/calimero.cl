@@ -64,7 +64,7 @@
   ;; TODO options
   (if (not (null parts))
       (error 'command-specific-error
-             :command "cwd"
+             :command "wc"
              :message "Cannot have arguments to `wc'~%"))
   (let ((lines 0))
     (cmd (emit)

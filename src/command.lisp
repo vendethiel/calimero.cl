@@ -95,7 +95,7 @@
 
                      ;; the function itself didn't request (done)
                      (when (and (equal :done (car ,args))
-                                ,(notany ^(equal _ "done") syms))
+                                ,(notany ^(string-equal _ "DONE") syms))
                        (funcall ,fwd :done)))))))
               (error 'command-error :message "Proper invocation is `(cmd (names...) ...)'")))
 
