@@ -11,7 +11,7 @@
   (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:defcondition*)
   (:import-from :calimero.data #:string-data #:string->data #:string-value)
-  (:import-from :calimero.command #:handle-command)
+  (:import-from :calimero.command #:handle-command #:output-data-command)
   (:import-from :calimero.plugin #:plugin #:handler)
 
   (:export #:repl))
@@ -42,9 +42,6 @@
 
 (defun* feed ((shell repl) (line string))
   (let* ((instrs (parse-line line))
-         (output (dlambda ((:data data)
-                           (if (typep data 'string-data)
-                               (format t "~a~%" (string-value data))))))
          (commands (mapcar
                     (lambda (parts)
                       (restart-case
@@ -64,5 +61,5 @@
                                          (prompt-new-value "Please enter the code for the command: "))
                           (eval value))))
                     instrs))
-         (pipe (reduce #'funcall commands :initial-value output :from-end t)))
+         (pipe (reduce #'funcall commands :initial-value #'output-data-command :from-end t)))
     (funcall pipe :done)))

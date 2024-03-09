@@ -4,7 +4,7 @@
 
   (:import-from :defstar :defun*)
 
-  (:import-from :calimero.myclass #:defclass* #:make@)
+  (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
 
   (:export :data
            :string-data :string->data :string-value :string-values))
@@ -12,6 +12,9 @@
 
 (defclass* data ()
   ())
+
+(defcondition* data-error (error)
+  ((message :type string)))
 
 (defclass* string-data (data)
   ((value :type string
@@ -25,7 +28,7 @@
   (mapcar (lambda (part)
             (if (typep part 'string-data)
                 (string-value part)
-                (error "Echo can only print string(s)")))
+                (error 'data-error :message "Echo can only print string(s)")))
           parts))
 
 

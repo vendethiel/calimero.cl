@@ -2,10 +2,14 @@
 (defpackage :calimero.util
   (:use :cl)
 
-  (:import-from :alexandria #:with-gensyms #:destructuring-case)
+  (:import-from :alexandria #:with-gensyms #:destructuring-case #:make-keyword)
 
-  (:export #:dlambda #:delambda))
+  (:export #:dlambda #:delambda
+           #:make-upcase-keyword))
 (in-package :calimero.util)
+
+(defun make-upcase-keyword (kw)
+  (make-keyword (string-upcase kw)))
 
 ; TODO defstar:*use-closer-mop?*
 

@@ -2,16 +2,16 @@
 (defpackage :calimero.plugin-sh
   (:use :cl)
 
-  ;(:import-from :cl-syntax #:use-syntax)
-  ;(:import-from :cl-punch #:punch-syntax)
   (:import-from :defstar #:defun*)
   (:import-from :alexandria-2 #:line-up-last)
   (:import-from :uiop)
 
-  (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:make@)
   (:import-from :calimero.data #:string->data #:string-values)
-  (:import-from :calimero.command #:make-simple-command #:make-nested-command #:cmd #:cmd_)
+  (:import-from :calimero.command
+                #:make-simple-command #:make-nested-command
+                #:cmd #:cmd_
+                #:command-specific-error)
   (:import-from :calimero.plugin #:plugin)
   (:import-from :calimero.repl #:repl #:cwd)
 
@@ -30,7 +30,9 @@
 
 (defun* cmd-cwd ((shell repl) parts)
   (if (not (null parts))
-      (error "Cannot have arguments to `cwd'~%"))
+      (error 'command-specific-error
+             :command "cwd"
+             :message "Cannot have arguments to `cwd'~%"))
   (cmd_ (emit)
     (line-up-last
      shell
@@ -55,7 +57,26 @@
 
 (defun* cmd-cat ((shell repl) parts)
   (cmd (emit)
-    (((list :data data) (emit data)))))
+    (((list :emit data)
+      (emit data)))))
+
+(defun* cmd-wc ((shell repl) parts)
+  ;; TODO options
+  (if (not (null parts))
+      (error 'command-specific-error
+             :command "cwd"
+             :message "Cannot have arguments to `wc'~%"))
+  (let ((lines 0))
+    (cmd (emit)
+      (((list :emit data)
+        (incf lines))
+
+       ((list :done)
+        (line-up-last
+         lines
+         write-to-string
+         string->data
+         emit))))))
 
 (defun make-handler ()
   (let ((subcommands
@@ -63,7 +84,8 @@
           (make-simple-command "echo" #'cmd-echo)
           (make-simple-command "cwd"  #'cmd-cwd)
           (make-simple-command "ls"   #'cmd-ls)
-          (make-simple-command "cat"  #'cmd-cat))))
+          (make-simple-command "cat"  #'cmd-cat)
+          (make-simple-command "wc"   #'cmd-wc))))
     (make-nested-command "sh commands" subcommands)))
 
 (defun make-plugin-sh ()

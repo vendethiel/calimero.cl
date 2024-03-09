@@ -2,11 +2,12 @@
 (defpackage :calimero.command
   (:use :cl)
 
-  (:import-from :alexandria #:if-let #:with-gensyms)
+  (:import-from :alexandria #:if-let #:with-gensyms #:proper-list-p)
   (:import-from :trivia #:match)
+  (:import-from :metabang-bind #:bind)
 
-  (:import-from :calimero.util #:dlambda)
-  (:import-from :calimero.myclass #:defclass* #:make@)
+  (:import-from :calimero.util #:dlambda #:make-upcase-keyword)
+  (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
   (:import-from :calimero.data #:string-data #:string-value)
 
   (:export :command
@@ -15,8 +16,12 @@
            :make-nested-command
            :make-prefix-command
            :make-simple-command
-           :cmd :cmd_))
+           :cmd :cmd_
+           :command-error :command-specific-error
+           :output-data-command))
 (in-package :calimero.command)
+
+(cl-punch:enable-punch-syntax)
 
 (defclass* command ()
   ((name :type string)))
@@ -60,26 +65,45 @@
       (if (and (typep fst 'string-data) (string-equal (prefix command) (string-value fst)))
           (handle-command (subcommand command) shell (cdr args))))))
 
+(defcondition* command-error (error)
+  ((message :type string)))
+
+(defcondition* command-specific-error (command-error)
+  ((command :type string)))
+
 (defmacro cmd (syms &body body)
-  (match syms
-    ((list emit)
-     (with-gensyms (fwd args)
-                                        ; TODO make sure `emit' is `"EMIT"'
-       `(lambda (,fwd)
-          (flet ((,emit (data) (funcall ,fwd :data data)))
-            ,@(butlast body)
-            (lambda (&rest ,args)
-              (match ,args
-                ,@(car (last body))
+  (if (proper-list-p syms)
+      (with-gensyms (fwd args)
+        (bind (((:flet sym-to-flet (sym))
+                `(,sym (&rest xs) (apply ,fwd ,(make-upcase-keyword sym) xs)))
+               (flets (mapcar #'sym-to-flet syms)))
+              `(lambda (,fwd)
+                 (flet (,@flets)
+                   ,@(butlast body)
+                   (lambda (&rest ,args)
+                     (match ,args
+                       ,@(car (last body))
 
-                ((list* :data _)
-                 nil) ; If the function didn't handle :data, explicitly discard it
+                       ((list :emit _)
+                         nil) ;; If the function didn't handle :emit, explicitly discard it
 
-                ((list* _)
-                 (funcall ,fwd ,args))))))))
+                       ((list :done)
+                        nil) ;; :done is handled specially
 
-    (_ (error "Proper invocation is `(cmd (emit) ...)'"))))
+                       ((list* _)
+                         (apply ,fwd ,args)))
 
-; Same as cmd, but with an empty match at the end
+                     ;; the function itself didn't request (done)
+                     (when (and (equal :done (car ,args))
+                                ,(notany ^(equal _ "done") syms))
+                       (funcall ,fwd :done)))))))
+              (error 'command-error :message "Proper invocation is `(cmd (names...) ...)'")))
+
+;; Same as cmd, but with an empty match at the end
 (defmacro cmd_ (syms &body body)
   `(cmd ,syms ,@body ()))
+
+(defun output-data-command (&rest xs)
+  (match xs
+    ((list :emit (string-data :value s))
+     (format t "~a~%" s))))
