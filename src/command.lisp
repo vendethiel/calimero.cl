@@ -2,13 +2,13 @@
 (defpackage :calimero.command
   (:use :cl)
 
-  (:import-from :alexandria #:if-let #:with-gensyms #:proper-list-p)
+  (:import-from :alexandria #:if-let #:with-gensyms #:proper-list-p #:last-elt)
   (:import-from :trivia #:match)
   (:import-from :metabang-bind #:bind)
 
   (:import-from :calimero.util #:dlambda #:make-upcase-keyword)
   (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
-  (:import-from :calimero.data #:string-data #:string-value)
+  (:import-from :calimero.data #:string-data #:string-value #:string-values)
 
   (:export :command
            :handle-command
@@ -17,8 +17,7 @@
            :make-prefix-command
            :make-simple-command
            :cmd :cmd_
-           :command-error :command-specific-error
-           :output-data-command))
+           :command-error :command-specific-error))
 (in-package :calimero.command)
 
 (cl-punch:enable-punch-syntax)
@@ -71,6 +70,8 @@
 (defcondition* command-specific-error (command-error)
   ((command :type string)))
 
+;; TODO command arity error
+
 (defmacro cmd (syms &body body)
   (if (proper-list-p syms)
       (with-gensyms (fwd args)
@@ -82,7 +83,7 @@
                    ,@(butlast body)
                    (lambda (&rest ,args)
                      (match ,args
-                       ,@(car (last body))
+                       ,@(last-elt body)
 
                        ((list :emit _)
                          nil) ;; If the function didn't handle :emit, explicitly discard it
@@ -102,8 +103,3 @@
 ;; Same as cmd, but with an empty match at the end
 (defmacro cmd_ (syms &body body)
   `(cmd ,syms ,@body ()))
-
-(defun output-data-command (&rest xs)
-  (match xs
-    ((list :emit (string-data :value s))
-     (format t "~a~%" s))))

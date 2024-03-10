@@ -11,7 +11,8 @@
   (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:defcondition*)
   (:import-from :calimero.data #:string-data #:string->data #:string-value)
-  (:import-from :calimero.command #:handle-command #:output-data-command)
+  (:import-from :calimero.command #:handle-command)
+  (:import-from :calimero.output #:make-output)
   (:import-from :calimero.plugin #:plugin #:handler)
 
   (:export #:repl))
@@ -61,5 +62,5 @@
                                          (prompt-new-value "Please enter the code for the command: "))
                           (eval value))))
                     instrs))
-         (pipe (reduce #'funcall commands :initial-value #'output-data-command :from-end t)))
+         (pipe (reduce #'funcall commands :initial-value (make-output) :from-end t)))
     (funcall pipe :done)))

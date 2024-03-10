@@ -7,7 +7,8 @@
   (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
 
   (:export :data
-           :string-data :string->data :string-value :string-values))
+           :string-data :string->data :string-value :string-values
+           :array-data :array->data :array-elements))
 (in-package :calimero.data)
 
 (defclass* data ()
@@ -34,6 +35,10 @@
 
 (defclass* array-data (data)
   ((elements :reader array-elements)))
+
+(defun* array->data ((elements cons))
+  :returns 'array-data
+  (make@ 'array-data (elements)))
 
 (defclass* table-data (data)
   ((pairs :reader table-pairs)))

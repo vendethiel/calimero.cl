@@ -6,7 +6,6 @@
   (:import-from :alexandria-2 #:line-up-last)
   (:import-from :uiop)
 
-  (:import-from :calimero.myclass #:make@)
   (:import-from :calimero.data #:string->data #:string-values)
   (:import-from :calimero.command
                 #:make-simple-command #:make-nested-command

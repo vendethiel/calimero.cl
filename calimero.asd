@@ -41,8 +41,10 @@
                                      (:file "data")
                                      (:file "command")
                                      (:file "plugin")
+                                     (:file "output")
                                      (:file "repl")
                                      (:file "plugin-sh")
+                                     (:file "plugin-builtins")
                                      (:file "loop")
                                      (:file "calimero"))))
 
