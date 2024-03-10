@@ -2,7 +2,8 @@
 (defpackage :calimero.plugin-builtins
   (:use :cl)
 
-  (:import-from :defstar :defun*)
+  (:import-from :defstar #:defun*)
+  (:import-from :serapeum #:push-end)
 
   (:import-from :calimero.plugin #:plugin)
   (:import-from :calimero.data #:array->data #:array-data)
@@ -40,10 +41,10 @@
   (let (xs)
     (cmd (emit)
       (((list :emit data)
-        (push data xs))
+        (push-end data xs))
 
       ((list :done)
-        (emit (array->data (reverse xs))))))))
+       (emit (array->data xs)))))))
 
 (defun* cmd-spread ((shell repl) parts)
   (if (not (null parts))

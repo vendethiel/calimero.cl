@@ -3,13 +3,12 @@
   (:use :cl)
 
   (:import-from :trivia #:match)
+  (:import-from :serapeum #:push-end)
 
   (:import-from :calimero.data #:string-data #:array-data #:string-values)
 
   (:export :make-output))
 (in-package :calimero.output)
-
-(cl-punch:enable-punch-syntax)
 
 (defun print-arrays (arrays)
   ;; TODO compute column size
@@ -27,15 +26,15 @@
           ((list :emit (array-data :elements e))
            (cond
              ((null cur-array)
-               (setf cur-array (list (length e) (list e))))
+              (setf cur-array (list (length e) (list e))))
 
              ((= (car cur-array) (length e))
-               (push e (cadr cur-array)))
+              (push-end e (cadr cur-array)))
 
              (t
-               (print-arrays (reverse (cadr cur-array)))
-               (setf cur-array nil))))
+              (print-arrays (cadr cur-array))
+              (setf cur-array nil))))
 
           ((list :done)
            (when cur-array
-             (print-arrays (reverse (cadr cur-array)))))))))
+             (print-arrays (cadr cur-array))))))))
