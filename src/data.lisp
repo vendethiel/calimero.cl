@@ -3,6 +3,7 @@
   (:use :cl)
 
   (:import-from :defstar :defun*)
+  (:import-from :trivial-types #:proper-list)
 
   (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
 
@@ -36,7 +37,7 @@
 (defclass* array-data (data)
   ((elements :reader array-elements)))
 
-(defun* array->data ((elements cons))
+(defun* array->data ((elements proper-list))
   :returns 'array-data
   (make@ 'array-data (elements)))
 

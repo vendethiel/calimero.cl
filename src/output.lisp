@@ -4,17 +4,23 @@
 
   (:import-from :trivia #:match)
   (:import-from :serapeum #:push-end)
+  (:import-from :metabang-bind #:bind)
 
   (:import-from :calimero.data #:string-data #:array-data #:string-values)
 
   (:export :make-output))
 (in-package :calimero.output)
 
+;; TODO not only string values
+;; TODO should also be able to be on multiple lines
 (defun print-arrays (arrays)
-  ;; TODO compute column size
-  ;; TODO not only string values
-  (dolist (array arrays)
-    (format t "[~{~a~^ | ~}]~%" (string-values array))))
+  "Generates a format string that pads to the longest of each column, then prints all the arrays using that format string."
+  (bind (((:flet max-length (&rest xs)) (apply #'max (mapcar #'length xs)))
+         (strings (mapcar #'string-values arrays))
+         (lengths (apply #'mapcar #'max-length strings))
+         (control (format nil "[~~{~{~~~da~^ | ~}~~}]~~%" lengths)))
+    (dolist (array arrays)
+      (format t control (string-values array)))))
 
 (defun make-output ()
     (let (cur-array)

@@ -56,12 +56,42 @@
       (dolist (x xs)
         (emit x))))))
 
+(defun* cmd-batch ((shell repl) parts)
+  "Batch elements. At :done, produces a partial array."
+  ;; TODO check args
+  (let ((limit 3)
+        xs)
+    (cmd (emit)
+      (((list :emit data)
+        (push-end data xs)
+        (when (>= (length xs) limit)
+          (emit (array->data xs))
+          (setf xs nil)))
+
+       ((list :done)
+        (when xs
+          (emit (array->data xs))))))))
+
+(defun* cmd-group ((shell repl) parts)
+  "Batch elements. Discards leftover elements."
+  ;; TODO check args
+  (let ((limit 3)
+        xs)
+    (cmd (emit)
+      (((list :emit data)
+        (push-end data xs)
+        (when (>= (length xs) limit)
+          (emit (array->data xs))
+          (setf xs nil)))))))
+
 (defun make-array-commands ()
   (let ((subcommands
           (list
            (make-simple-command "of"     #'cmd-of)
            (make-simple-command "take"   #'cmd-take)
            (make-simple-command "drop"   #'cmd-drop)
+           (make-simple-command "batch"  #'cmd-batch)
+           (make-simple-command "group"  #'cmd-group)
            (make-simple-command "spread" #'cmd-spread)
            (make-simple-command "gather" #'cmd-gather))))
     (make-nested-command "array commands" subcommands)))

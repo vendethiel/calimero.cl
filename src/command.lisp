@@ -95,6 +95,7 @@
                          (apply ,fwd ,args)))
 
                      ;; the function itself didn't request (done)
+                     ;; (one example would be some async code, that would delay its :done)
                      (when (and (equal :done (car ,args))
                                 ,(notany ^(string-equal _ "DONE") syms))
                        (funcall ,fwd :done)))))))
