@@ -2,7 +2,11 @@
 (defpackage :calimero.myclass
   (:use :cl)
 
-  (:import-from :nclasses #:define-class))
+  (:import-from :alexandria #:alist-hash-table #:with-gensyms)
+  (:import-from :serapeum #:lret)
+  (:import-from :nclasses #:define-class)
+
+  (:import-from :calimero.util #:hash-table-merge-alist))
 (in-package :calimero.myclass)
 
 (cl-reexport:reexport-from :nclasses
@@ -32,4 +36,26 @@
                                   (list slot)))
                             slots)))
 
-(export '(defclass* make@))
+(define-method-combination ahashmap (&optional (order ':most-specific-first))
+  ((around (:around))
+   (primary (ahashmap) :order order :required t))
+  (case order
+    (:most-specific-first)
+    (:most-specific-last (setq primary (reverse primary)))
+    (otherwise (method-combination-error "~S is an invalid order.~@
+     :most-specific-first and :most-specific-last are the possible values."
+                                         order)))
+  (let ((form (if (rest primary)
+                  (with-gensyms (table)
+                    `(lret ((,table (make-hash-table)))
+                       ,@(mapcar (lambda (method)
+                                   `(hash-table-merge-alist ,table (call-method ,method)))
+                                 primary)))
+                  `(alist-hash-table (call-method ,(first primary))))))
+    (if around
+        `(call-method ,(first around)
+                      (,@(rest around)
+                       (make-method ,form)))
+        form)))
+
+(export '(defclass* make@ ahashmap))
