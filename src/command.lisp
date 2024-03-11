@@ -7,7 +7,8 @@
   (:import-from :metabang-bind #:bind)
 
   (:import-from :calimero.util #:dlambda #:make-upcase-keyword)
-  (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
+  (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition* #:ahashmap)
+  (:import-from :calimero.error #:calimero-error #:error-components)
   (:import-from :calimero.data #:string-data #:string-value #:string-values)
 
   (:export :command
@@ -64,11 +65,17 @@
       (if (and (typep fst 'string-data) (string-equal (prefix command) (string-value fst)))
           (handle-command (subcommand command) shell (cdr args))))))
 
-(defcondition* command-error (error)
+(defcondition* command-error (calimero-error)
   ((message :type string)))
+
+(defmethod error-components ahashmap ((err command-error))
+  (list (cons :message (message err))))
 
 (defcondition* command-specific-error (command-error)
   ((command :type string)))
+
+(defmethod error-components ahashmap ((err command-specific-error))
+  (list (cons :command (command err))))
 
 ;; TODO command arity error
 
