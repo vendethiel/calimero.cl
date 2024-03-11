@@ -39,12 +39,6 @@
 (define-method-combination ahashmap (&optional (order ':most-specific-first))
   ((around (:around))
    (primary (ahashmap) :order order :required t))
-  (case order
-    (:most-specific-first)
-    (:most-specific-last (setq primary (reverse primary)))
-    (otherwise (method-combination-error "~S is an invalid order.~@
-     :most-specific-first and :most-specific-last are the possible values."
-                                         order)))
   (let ((form (if (rest primary)
                   (with-gensyms (table)
                     `(lret ((,table (make-hash-table)))
