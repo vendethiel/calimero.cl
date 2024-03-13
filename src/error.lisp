@@ -14,3 +14,5 @@
   (:documentation "Returns the different parts of a calimero error")
   (:method-combination ahashmap))
 
+;; TODO explanation method that uses serapeum:pophash to extract what it can, and dump the other keys
+

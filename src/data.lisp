@@ -27,11 +27,12 @@
   :returns 'string-data
   (make@ 'string-data (value)))
 
+;; XXX remove, echo shouldn't need it
 (defun string-values (parts)
   (mapcar (lambda (part)
             (if (typep part 'string-data)
                 (string-value part)
-                (error 'data-error :message "Echo can only print string(s)")))
+                (error 'data-error :message "Unwrapping something else than a string. Fix output?")))
           parts))
 
 (defclass* number-data (data)

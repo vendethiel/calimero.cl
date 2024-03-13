@@ -2,20 +2,22 @@
 (defpackage :calimero.util
   (:use :cl)
 
-  (:import-from :alexandria #:with-gensyms #:destructuring-case #:make-keyword)
+  (:import-from :alexandria #:with-gensyms #:destructuring-case)
+  (:import-from :serapeum #:find-keyword)
 
   (:export #:dlambda #:delambda
            #:make-upcase-keyword
            #:hash-table-merge-alist))
 (in-package :calimero.util)
 
+;; XXX use serapeum:merge-tables + alexandria:alist-hash-table? (though that copies)
 (defun hash-table-merge-alist (table alist)
   (dolist (cons alist)
     (setf (gethash (car cons) table) (cdr cons)))
   table)
 
 (defun make-upcase-keyword (kw)
-  (make-keyword (string-upcase kw)))
+  (find-keyword (string-upcase kw)))
 
 ; TODO defstar:*use-closer-mop?*
 

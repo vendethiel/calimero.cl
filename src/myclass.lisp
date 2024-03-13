@@ -36,6 +36,7 @@
                                   (list slot)))
                             slots)))
 
+;; XXX use serapeum:merge-tables?
 (define-method-combination ahashmap (&optional (order ':most-specific-first))
   ((around (:around))
    (primary (ahashmap) :order order :required t))
@@ -51,5 +52,7 @@
                       (,@(rest around)
                        (make-method ,form)))
         form)))
+
+;; XXX phashmap using serapeum:pairhash?
 
 (export '(defclass* make@ ahashmap))
