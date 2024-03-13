@@ -8,7 +8,7 @@
   (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
 
   (:export :data
-           :string-data :string->data :string-value :string-values
+           :string-data :string->data :string-value
            :number-data :number->data :number-value
            :array-data :array->data :array-elements))
 (in-package :calimero.data)
@@ -26,14 +26,6 @@
 (defun* string->data ((value string))
   :returns 'string-data
   (make@ 'string-data (value)))
-
-;; XXX remove, echo shouldn't need it
-(defun string-values (parts)
-  (mapcar (lambda (part)
-            (if (typep part 'string-data)
-                (string-value part)
-                (error 'data-error :message "Unwrapping something else than a string. Fix output?")))
-          parts))
 
 (defclass* number-data (data)
   ((value :type number

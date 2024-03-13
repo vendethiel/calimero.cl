@@ -6,7 +6,7 @@
   (:import-from :alexandria-2 #:line-up-last)
   (:import-from :uiop)
 
-  (:import-from :calimero.data #:string->data #:string-values)
+  (:import-from :calimero.data #:string->data)
   (:import-from :calimero.command
                 #:make-simple-command #:make-nested-command
                 #:cmd #:cmd_
@@ -18,14 +18,9 @@
 (in-package :calimero.plugin-sh)
 
 (defun* cmd-echo ((shell repl) parts)
-  (let ((parts-string (string-values parts)))
-    (cmd_ (emit)
-      (line-up-last
-       parts
-       string-values
-       (format nil "~{~a~^ ~}")
-       string->data
-       emit))))
+  (cmd_ (emit)
+    (dolist (part parts)
+      (emit part))))
 
 (defun* cmd-cwd ((shell repl) parts)
   (if (not (null parts))

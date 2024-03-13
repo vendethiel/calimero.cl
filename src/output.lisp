@@ -4,8 +4,9 @@
 
   (:import-from :trivia #:match)
   (:import-from :serapeum #:push-end #:op)
+  (:import-from :defstar #:defun*)
   (:import-from :metabang-bind #:bind)
-  (:import-from :str #:trim-right)
+  (:import-from :str #:trim-right #:repeat #:replace-all #:lines)
 
   (:import-from :calimero.data
                 #:data
@@ -16,15 +17,39 @@
   (:export :make-output))
 (in-package :calimero.output)
 
+(defun transpose (xs)
+  (apply #'mapcar #'list xs))
+
 (defun print-arrays (s arrays)
   "Generates a format string that pads to the longest of each column, then prints all the arrays using that format string."
-  (bind (((:flet max-length (&rest xs))
-          (apply #'max (mapcar #'length xs)))
+  (bind (((:flet max-line-length (cell))
+          (apply #'max (mapcar #'length (lines cell))))
+         ((:flet max-length (&rest xs))
+          (apply #'max (mapcar #'max-line-length xs)))
+         ((:flet lines-upto (n))
+          (lambda (cell)
+            (loop :repeat (1+ n)
+                  :for cur = (lines cell)
+                    :then (cdr cur)
+                  :collect (or (car cur) ""))))
+
          (strings (mapcar (op (mapcar #'stringify _)) arrays))
+
          (lengths (apply #'mapcar #'max-length strings))
-         (control (format nil "[~~{~{~~~da~^ | ~}~~}]~~%" lengths)))
-    (dolist (array strings)
-      (format s control array))))
+         (control (format nil "|~~{~{~~~da~^|~}~~}|~~%" lengths))
+
+         (sep-control (replace-all "|" "+" control))
+         (sep (format nil sep-control (mapcar (op (repeat _ "-")) lengths))))
+
+    (dolist (xs strings)
+      (let* ((newline-counts (mapcar (op (count #\Newline _)) xs))
+             (max-newlines (apply #'max newline-counts))
+             (padded (mapcar (lines-upto max-newlines) xs))
+             (lines (transpose padded)))
+        (write-string sep s)
+        (dolist (line lines)
+          (format s control line))))
+    (write-string sep s)))
 
 ;; XXX maybe `make-output-to' should receive more "formal" data,
 ;;     and we should have an adapter so that it accepts :emit/:done from a pipe?
@@ -32,14 +57,15 @@
   (trim-right ;; XXX only trim the last \n
    (with-output-to-string (s)
      (let ((output (make-output-to s)))
-       (dolist (e xs)
-         (funcall output :emit e))
+       (dolist (x xs)
+         (funcall output :emit x))
        (funcall output :done)))))
 
-(defun stringify (value)
+(defun* stringify (value)
+  :returns string
   (match value
     ((string-data :value s) s)
-    ((number-data :value n) n)
+    ((number-data :value n) (write-to-string n))
     ((array-data :elements xs) (output-array-elements xs))))
 
 (defun make-output-to (target)
