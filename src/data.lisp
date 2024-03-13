@@ -9,6 +9,7 @@
 
   (:export :data
            :string-data :string->data :string-value :string-values
+           :number-data :number->data :number-value
            :array-data :array->data :array-elements))
 (in-package :calimero.data)
 
@@ -33,6 +34,13 @@
                 (error 'data-error :message "Echo can only print string(s)")))
           parts))
 
+(defclass* number-data (data)
+  ((value :type number
+          :reader number-value)))
+
+(defun* number->data ((value number))
+  :returns 'number-data
+  (make@ 'number-data (value)))
 
 (defclass* array-data (data)
   ((elements :reader array-elements)))

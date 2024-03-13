@@ -2,8 +2,6 @@
 (defpackage :calimero.repl
   (:use :cl)
 
-  ;(:import-from :cl-syntax #:use-syntax)
-  ;(:import-from :cl-punch #:punch-syntax)
   (:import-from :trivial-types #:proper-list) ; alexandria:proper-list is more for debug purposes
   (:import-from :alexandria #:if-let)
   (:import-from :defstar #:defun*)
@@ -11,7 +9,9 @@
   (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:defcondition*)
   (:import-from :calimero.data #:string-data #:string->data #:string-value)
+  (:import-from :calimero.error #:calimero-error)
   (:import-from :calimero.command #:handle-command)
+  (:import-from :calimero.parse #:parse-line)
   (:import-from :calimero.output #:make-output)
   (:import-from :calimero.plugin #:plugin #:handler)
 
@@ -24,16 +24,11 @@
   ((plugins nil :type (proper-list plugin))
    (cwd :type pathname)))
 
-; TODO proper parsing
-(defun* parse-arguments ((line string))
-  (mapcar #'string->data
-          (str:split " " (str:trim line) :omit-nulls t)))
-
-(defun* parse-line ((line string))
-  (mapcar #'parse-arguments (str:split "|" line)))
-
-(defcondition* command-not-found (error)
+(defcondition* command-not-found (calimero-error)
   ())
+
+;;(defmethod error-components ahashmap ((err command-not-found))
+;;  )
 
 ; XXX stolen from the cookbook, try to see if that's available somewhere else.
 (defun prompt-new-value (prompt)

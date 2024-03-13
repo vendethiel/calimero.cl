@@ -6,7 +6,10 @@
   (:import-from :serapeum #:push-end)
   (:import-from :metabang-bind #:bind)
 
-  (:import-from :calimero.data #:string-data #:array-data #:string-values)
+  (:import-from :calimero.data
+                #:string-data #:string-values
+                #:number-data
+                #:array-data)
 
   (:export :make-output))
 (in-package :calimero.output)
@@ -23,28 +26,51 @@
       (format t control (string-values array)))))
 
 (defun make-output ()
-    (bind (cur-array
-           cur-table
+  (bind (cur-array
+         ((:flet fits-array (e))
+          (or (null cur-array)
+              (= (car cur-array) (length e))))
+         ((:flet add-to-array (e))
+          (if cur-array
+              (push-end e (cadr cur-array))
+              (setf cur-array (list (length e) (list e)))))
+         ((:flet print-flush-array ())
+          (when cur-array
+            (print-arrays (cadr cur-array))
+            (setf cur-array nil)))
 
-           ((:flet print-flush-array ())
-            (when cur-array
-              (print-arrays (cadr cur-array))
-              (setf cur-array nil))))
-      (lambda (&rest xs)
-        (match xs
-          ((list :emit (string-data :value s))
-           (format t "~a~%" s))
+         cur-coll
+         ((:flet fits-coll (e))
+          nil)
+         ((:flet add-to-coll (e))
+          (when cur-coll))
+         ((:flet print-flush-coll ())
+          (when cur-coll
 
-          ((list :emit (array-data :elements e))
-           (cond
-             ((null cur-array)
-              (setf cur-array (list (length e) (list e))))
+            (setf cur-coll nil)))
 
-             ((= (car cur-array) (length e))
-              (push-end e (cadr cur-array)))
+         ((:flet print-flush ())
+          (print-flush-array)
+          (print-flush-coll)))
+    (lambda (&rest xs)
+      (match xs
+        ((list :emit (string-data :value s))
+         (print-flush)
+         (format t "~a~%" s))
 
-             (t
-              (print-flush-array))))
+        ((list :emit (number-data :value n))
+         (print-flush)
+         (format t "~d~%" n))
 
-          ((list :done)
-           (print-flush-array))))))
+        ((list :emit (array-data :elements e))
+         (cond
+           ((fits-array e)
+            (add-to-array e))
+
+           (t
+            ;; print and start a new array with the new size
+            (print-flush)
+            (add-to-array e))))
+
+        ((list :done)
+         (print-flush))))))
