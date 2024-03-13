@@ -23,7 +23,13 @@
       (format t control (string-values array)))))
 
 (defun make-output ()
-    (let (cur-array)
+    (bind (cur-array
+           cur-table
+
+           ((:flet print-flush-array ())
+            (when cur-array
+              (print-arrays (cadr cur-array))
+              (setf cur-array nil))))
       (lambda (&rest xs)
         (match xs
           ((list :emit (string-data :value s))
@@ -38,9 +44,7 @@
               (push-end e (cadr cur-array)))
 
              (t
-              (print-arrays (cadr cur-array))
-              (setf cur-array nil))))
+              (print-flush-array))))
 
           ((list :done)
-           (when cur-array
-             (print-arrays (cadr cur-array))))))))
+           (print-flush-array))))))

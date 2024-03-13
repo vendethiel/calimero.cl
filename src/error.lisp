@@ -13,3 +13,4 @@
 (defgeneric error-components (err)
   (:documentation "Returns the different parts of a calimero error")
   (:method-combination ahashmap))
+
