@@ -3,10 +3,10 @@
   (:use :cl)
 
   (:import-from :trivia #:match)
-  (:import-from :serapeum #:push-end #:op)
+  (:import-from :serapeum #:push-end #:op #:drop-suffix #:nest)
   (:import-from :defstar #:defun*)
   (:import-from :metabang-bind #:bind)
-  (:import-from :str #:trim-right #:repeat #:replace-all #:lines)
+  (:import-from :str #:repeat #:replace-all #:lines)
 
   (:import-from :calimero.data
                 #:data
@@ -22,14 +22,14 @@
 
 (defun print-arrays (s arrays)
   "Generates a format string that pads to the longest of each column, then prints all the arrays using that format string."
-  (bind (((:flet max-line-length (cell))
-          (apply #'max (mapcar #'length (lines cell))))
-         ((:flet max-length (&rest xs))
-          (apply #'max (mapcar #'max-line-length xs)))
+  (bind (((:flet max-length (&rest cells))
+          (loop :for cell :in cells
+                :maximizing (loop :for line :in (lines cell)
+                                  :maximizing (length line))))
          ((:flet lines-upto (n))
           (lambda (cell)
             (loop :repeat (1+ n)
-                  :for cur = (lines cell)
+                  :for cur := (lines cell)
                     :then (cdr cur)
                   :collect (or (car cur) ""))))
 
@@ -43,7 +43,7 @@
 
     (dolist (xs strings)
       (let* ((newline-counts (mapcar (op (count #\Newline _)) xs))
-             (max-newlines (apply #'max newline-counts))
+             (max-newlines (reduce #'max newline-counts))
              (padded (mapcar (lines-upto max-newlines) xs))
              (lines (transpose padded)))
         (write-string sep s)
@@ -54,12 +54,13 @@
 ;; XXX maybe `make-output-to' should receive more "formal" data,
 ;;     and we should have an adapter so that it accepts :emit/:done from a pipe?
 (defun output-array-elements (xs)
-  (trim-right ;; XXX only trim the last \n
-   (with-output-to-string (s)
-     (let ((output (make-output-to s)))
-       (dolist (x xs)
-         (funcall output :emit x))
-       (funcall output :done)))))
+  (nest
+   (drop-suffix '(#\Newline))
+   (with-output-to-string (s))
+   (loop :with output = (make-output-to s)
+         :for x :in xs
+         :do (funcall output :emit x)
+         :finally (funcall output :done))))
 
 (defun* stringify (value)
   :returns string

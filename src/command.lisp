@@ -60,6 +60,8 @@
       (if-let (handled (handle-command subcommand shell args))
           (return handled))))
 
+  ;; XXX make prefix command take a list of prefixes, and use serapeum:gcp instead?
+  ;;     but that means converting to/from strings more heavily (maybe?)
   (:method ((command prefix-command) shell args)
     (let ((fst (car args)))
       (if (and (typep fst 'string-data) (string-equal (prefix command) (string-value fst)))
