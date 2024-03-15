@@ -59,6 +59,9 @@
         (write-string sep s)))))
 
 (defun output-array-elements (xs)
+  ;; XXX should this *always* print an array?
+  ;;     seems like pretty, but less ambiguous
+  ;;     it'd be `(print-arrays s (list xs))', similar to `output-kv'.
   (nest
    (drop-suffix '(#\Newline))
    (with-output-to-string (s))
@@ -67,15 +70,19 @@
          :do (funcall output :emit x)
          :finally (funcall output :done))))
 
+(defun output-kv (k v)
+  (nest
+   (drop-suffix '(#\Newline))
+   (with-output-to-string (s))
+   (print-arrays s (list v) :header k)))
+
 (defun* stringify (value)
   :returns string
   (match value
     ((string-data :value s) s)
     ((number-data :value n) (write-to-string n))
     ((array-data :elements xs) (output-array-elements xs))
-    ((table-data :keys k :values v)
-     (with-output-to-string (s)
-       (print-arrays s (list v) :header k)))))
+    ((table-data :keys k :values v) (output-kv k v))))
 
 ;; XXX maybe `make-output-to' should receive more "formal" data,
 ;;     and we should have an adapter so that it accepts :emit/:done from a pipe?
