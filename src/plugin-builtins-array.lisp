@@ -67,6 +67,7 @@
       (dolist (x xs)
         (emit x))))))
 
+;; XXX rename gather-batch?
 (defun* cmd-as-batch ((shell repl) parts)
   "Batch elements. Like as-group, but produces a partial array if there are leftover elements."
   (let ((limit (single-number-arg parts "array as-batch"))
@@ -82,6 +83,7 @@
         (when xs
           (emit (array->data xs))))))))
 
+;; XXX rename gather-group?
 (defun* cmd-as-group ((shell repl) parts)
   "Groups elements. Like as-batch, but discards leftover elements."
   (let ((limit (single-number-arg parts "array as-roup"))
@@ -93,14 +95,22 @@
           (emit (array->data xs))
           (setf xs nil)))))))
 
+;; XXX should it error when oob? probably an option +silent?
+(defun* cmd-index ((shell repl) parts)
+  (let ((limit (single-number-arg parts "array index")))
+    (cmd (emit)
+      (((list :emit (array-data :elements xs))
+        (emit (nth limit xs)))))))
+
 (defun make-array-builtins ()
   (let ((subcommands
           (list
            (make-simple-command "of"        #'cmd-of)
            (make-simple-command "take"      #'cmd-take)
            (make-simple-command "drop"      #'cmd-drop)
-           (make-simple-command "as-batch"  #'cmd-as-batch)
-           (make-simple-command "as-group"  #'cmd-as-group)
+           (make-simple-command "index"     #'cmd-index)
            (make-simple-command "spread"    #'cmd-spread)
-           (make-simple-command "gather"    #'cmd-gather))))
+           (make-simple-command "gather"    #'cmd-gather)
+           (make-simple-command "as-batch"  #'cmd-as-batch)
+           (make-simple-command "as-group"  #'cmd-as-group))))
     (make-nested-command "array commands" subcommands)))

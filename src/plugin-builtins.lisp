@@ -12,6 +12,7 @@
                 #:command-specific-error
                 #:cmd)
   (:import-from :calimero.plugin-builtins.array #:make-array-builtins)
+  (:import-from :calimero.plugin-builtins.table #:make-table-builtins)
 
   (:export :make-plugin-builtins))
 (in-package :calimero.plugin-builtins)
@@ -19,7 +20,8 @@
 (defun make-handler ()
   (let ((subcommands
           (list
-           (make-prefix-command "array commands" "array" (make-array-builtins)))))
+           (make-prefix-command "array commands" "array" (make-array-builtins))
+           (make-prefix-command "table commands" "table" (make-table-builtins)))))
     (make-nested-command "builtin commands" subcommands)))
 
 (defun make-plugin-builtins ()

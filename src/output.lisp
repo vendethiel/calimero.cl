@@ -12,7 +12,8 @@
                 #:data
                 #:string-data #:string-value
                 #:number-data
-                #:array-data #:array-elements)
+                #:array-data #:array-elements
+                #:table-data)
 
   (:export :make-output))
 (in-package :calimero.output)
@@ -20,7 +21,7 @@
 (defun transpose (xs)
   (apply #'mapcar #'list xs))
 
-(defun print-arrays (s arrays)
+(defun print-arrays (s arrays &key header)
   "Generates a format string that pads to the longest of each column, then prints all the arrays using that format string."
   (bind (((:flet max-length (&rest cells))
           (loop :for cell :in cells
@@ -39,20 +40,24 @@
          (control (format nil "|~~{~{~~~da~^|~}~~}|~~%" lengths))
 
          (sep-control (replace-all "|" "+" control))
-         (sep (format nil sep-control (mapcar (op (repeat _ "-")) lengths))))
+         (sep (format nil sep-control (mapcar (op (repeat _ "-")) lengths)))
+         (header-sep (format nil sep-control (mapcar (op (repeat _ "=")) lengths))) )
 
+    (if header
+        (progn
+          (write-string header-sep s)
+          (format s control header)
+          (write-string header-sep s))
+        (write-string sep s))
     (dolist (xs strings)
       (let* ((newline-counts (mapcar (op (count #\Newline _)) xs))
              (max-newlines (reduce #'max newline-counts))
              (padded (mapcar (lines-upto max-newlines) xs))
              (lines (transpose padded)))
-        (write-string sep s)
         (dolist (line lines)
-          (format s control line))))
-    (write-string sep s)))
+          (format s control line))
+        (write-string sep s)))))
 
-;; XXX maybe `make-output-to' should receive more "formal" data,
-;;     and we should have an adapter so that it accepts :emit/:done from a pipe?
 (defun output-array-elements (xs)
   (nest
    (drop-suffix '(#\Newline))
@@ -67,10 +72,17 @@
   (match value
     ((string-data :value s) s)
     ((number-data :value n) (write-to-string n))
-    ((array-data :elements xs) (output-array-elements xs))))
+    ((array-data :elements xs) (output-array-elements xs))
+    ((table-data :keys k :values v)
+     (with-output-to-string (s)
+       (print-arrays s (list v) :header k)))))
 
+;; XXX maybe `make-output-to' should receive more "formal" data,
+;;     and we should have an adapter so that it accepts :emit/:done from a pipe?
 (defun make-output-to (target)
   (bind (cur-array
+         cur-coll
+
          ((:flet fits-array (e))
           (or (null cur-array)
               (= (car cur-array) (length e))))
@@ -83,14 +95,16 @@
             (print-arrays target (cadr cur-array))
             (setf cur-array nil)))
 
-         cur-coll
-         ((:flet fits-coll (e))
-          nil)
-         ((:flet add-to-coll (e))
-          (when cur-coll))
+         ((:flet fits-coll (k))
+          (or (null cur-coll)
+              (equal (car cur-coll) k)))
+         ((:flet add-to-coll (k v))
+          (if cur-coll
+            (push-end v (cadr cur-coll))
+            (setf cur-coll (list k (list v)))))
          ((:flet print-flush-coll ())
           (when cur-coll
-
+            (print-arrays target (cadr cur-coll) :header (car cur-coll))
             (setf cur-coll nil)))
 
          ((:flet print-flush ())
@@ -115,6 +129,16 @@
             ;; print and start a new array with the new size
             (print-flush)
             (add-to-array e))))
+
+        ((list :emit (table-data :keys keys :values values))
+         (cond
+           ((fits-coll keys)
+            (add-to-coll keys values))
+
+           (t
+            ;; print and start a new coll with the new table
+            (print-flush)
+            (add-to-coll keys values))))
 
         ((list :done)
          (print-flush))))))

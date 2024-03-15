@@ -47,6 +47,7 @@
                                      (:file "repl")
                                      (:file "plugin-sh")
                                      (:file "plugin-builtins-array")
+                                     (:file "plugin-builtins-table")
                                      (:file "plugin-builtins")
                                      (:file "loop")
                                      (:file "calimero"))))

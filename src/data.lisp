@@ -10,7 +10,8 @@
   (:export :data
            :string-data :string->data :string-value
            :number-data :number->data :number-value
-           :array-data :array->data :array-elements))
+           :array-data :array->data :array-elements
+           :table-data :kv->data))
 (in-package :calimero.data)
 
 (defclass* data ()
@@ -43,10 +44,11 @@
   (make@ 'array-data (elements)))
 
 (defclass* table-data (data)
-  ((pairs :reader table-pairs)))
+  ((keys :reader table-keys :type (proper-list 'string))
+   (values :reader table-values :type (proper-list 'data))))
 
-(defun* table-keys ((table table-data))
-  nil)
-
-(defun* table-values ((table table-data))
-  nil)
+(defun* kv->data ((keys proper-list) (values proper-list))
+  :returns 'table-data
+  (unless (= (length keys) (length values))
+    (error "Table has unmatched keys and values"))
+  (make@ 'table-data (keys values)))
