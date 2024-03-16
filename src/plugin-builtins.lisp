@@ -2,15 +2,11 @@
 (defpackage :calimero.plugin-builtins
   (:use :cl)
 
-  (:import-from :defstar #:defun*)
-
   (:import-from :calimero.error )
   (:import-from :calimero.repl #:repl)
   (:import-from :calimero.plugin #:plugin)
   (:import-from :calimero.command
-                #:make-prefix-command #:make-nested-command
-                #:command-specific-error
-                #:cmd)
+                #:make-prefix-command #:make-nested-command)
   (:import-from :calimero.plugin-builtins.array #:make-array-builtins)
   (:import-from :calimero.plugin-builtins.table #:make-table-builtins)
 

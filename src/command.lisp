@@ -6,7 +6,7 @@
   (:import-from :trivia #:match)
   (:import-from :metabang-bind #:bind)
 
-  (:import-from :calimero.util #:dlambda #:make-upcase-keyword)
+  (:import-from :calimero.util #:make-upcase-keyword)
   (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition* #:ahashmap)
   (:import-from :calimero.error #:calimero-error #:error-components)
   (:import-from :calimero.data #:string-data #:string-value)

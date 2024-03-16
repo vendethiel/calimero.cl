@@ -10,7 +10,7 @@
 
   (:import-from :calimero.data
                 #:data
-                #:string-data #:string-value
+                #:string-data
                 #:number-data
                 #:array-data #:array-elements
                 #:table-data)

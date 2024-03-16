@@ -6,9 +6,8 @@
   (:import-from :alexandria #:if-let)
   (:import-from :defstar #:defun*)
 
-  (:import-from :calimero.util #:dlambda)
   (:import-from :calimero.myclass #:defclass* #:defcondition*)
-  (:import-from :calimero.data #:string-data #:string->data #:string-value)
+  (:import-from :calimero.data #:string->data #:string-value)
   (:import-from :calimero.error #:calimero-error)
   (:import-from :calimero.command #:handle-command)
   (:import-from :calimero.parse #:parse-line)

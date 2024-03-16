@@ -9,7 +9,7 @@
   (:import-from :calimero.plugin #:plugin)
   (:import-from :calimero.data #:array->data #:array-data #:number-data)
   (:import-from :calimero.command
-                #:make-simple-command #:make-nested-command #:make-prefix-command
+                #:make-simple-command #:make-nested-command
                 #:command-specific-error
                 #:cmd #:cmd_)
   (:import-from :calimero.repl #:repl)
