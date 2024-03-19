@@ -39,26 +39,42 @@
          (strings (mapcar (op (mapcar #'stringify _)) arrays))
 
          (lengths (apply #'mapcar #'max-length strings))
-         (control (format nil "|~~{~{~~~da~^|~}~~}|~~%" lengths))
 
-         (sep-control (replace-all "|" "+" control))
-         (sep (format nil sep-control (mapcar (op (repeat _ "-")) lengths)))
-         (header-sep (format nil sep-control (mapcar (op (repeat _ "=")) lengths))) )
+         ((:flet make-control (fst mid lst))
+          (format nil (concatenate 'string fst "~~{~{~~~da~^" mid "~}~~}" lst "~~%") lengths))
+
+         ((:flet make-line (fst mid lst rep))
+          (format nil
+                  (make-control fst mid lst)
+                  (mapcar (op (repeat _ rep)) lengths)))
+
+         (table-control (make-control "┃" "┃" "┃"))
+         (array-control (make-control "│" "│" "│"))
+
+         (table-header-start (make-line "┏" "┬" "┓" "━"))
+         (table-header-end (make-line "┡" "━" "┩" "━"))
+         (array-header (make-line "╭" "┰" "╮" "─"))
+         (array-sep (make-line "├" "│" "┤" "─"))
+         (array-end (make-line "╰" "│" "╯" "─")))
 
     (if header
         (progn
-          (write-string header-sep s)
-          (format s control header)
-          (write-string header-sep s))
-        (write-string sep s))
-    (dolist (xs strings)
-      (let* ((newline-counts (mapcar (op (count #\Newline _)) xs))
-             (max-newlines (reduce #'max newline-counts))
-             (padded (mapcar (lines-upto max-newlines) xs))
-             (lines (transpose padded)))
-        (dolist (line lines)
-          (format s control line))
-        (write-string sep s)))))
+          (write-string table-header-start s)
+          (format s table-control header)
+          (write-string table-header-end s))
+        (write-string array-header s))
+    (let ((cur 0))
+      (dolist (xs strings)
+        (let* ((newline-counts (mapcar (op (count #\Newline _)) xs))
+               (max-newlines (reduce #'max newline-counts))
+               (padded (mapcar (lines-upto max-newlines) xs))
+               (lines (transpose padded)))
+          (dolist (line lines)
+            (format s array-control line)))
+        (incf cur)
+        (if (= cur (length strings))
+          (write-string array-end s)
+          (write-string array-sep s))))))
 
 (defun output-array-elements (xs)
   ;; XXX should this *always* print an array?
