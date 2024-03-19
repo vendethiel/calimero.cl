@@ -52,10 +52,10 @@
          (array-control (make-control "│" "│" "│"))
 
          (table-header-start (make-line "┏" "┬" "┓" "━"))
-         (table-header-end (make-line "┡" "━" "┩" "━"))
+         (table-header-end (make-line "┡" "╇" "┩" "━"))
          (array-header (make-line "╭" "┰" "╮" "─"))
-         (array-sep (make-line "├" "│" "┤" "─"))
-         (array-end (make-line "╰" "│" "╯" "─")))
+         (array-sep (make-line "├" "┼" "┤" "─"))
+         (array-end (make-line "╰" "┴" "╯" "─")))
 
     (if header
         (progn
