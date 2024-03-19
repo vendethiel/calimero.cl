@@ -2,7 +2,7 @@
 (defpackage :calimero.plugin
   (:use :cl)
 
-  (:import-from :calimero.myclass #:defclass*)
+  (:import-from :calimero.oo #:defclass*)
   (:import-from :calimero.command #:command)
 
   (:export :plugin))

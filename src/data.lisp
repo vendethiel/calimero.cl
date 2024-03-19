@@ -5,7 +5,7 @@
   (:import-from :defstar :defun*)
   (:import-from :trivial-types #:proper-list)
 
-  (:import-from :calimero.myclass #:defclass* #:make@ #:defcondition*)
+  (:import-from :calimero.oo #:defclass* #:make@ #:defcondition*)
 
   (:export :data
            :string-data :string->data :string-value

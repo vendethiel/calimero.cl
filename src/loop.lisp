@@ -4,7 +4,7 @@
 
   (:import-from :uiop)
 
-  (:import-from :calimero.myclass #:make@)
+  (:import-from :calimero.oo #:make@)
   (:import-from :calimero.repl #:repl #:feed)
   (:import-from :calimero.plugin-sh #:make-plugin-sh)
   (:import-from :calimero.plugin-builtins #:make-plugin-builtins)

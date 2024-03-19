@@ -8,12 +8,14 @@
   (:import-from :metabang-bind #:bind)
   (:import-from :str #:repeat #:replace-all #:lines)
 
+  (:import-from :calimero.oo #:defcondition*)
   (:import-from :calimero.data
                 #:data
                 #:string-data
                 #:number-data
                 #:array-data #:array-elements
                 #:table-data)
+  (:import-from :calimero.error #:calimero-error)
 
   (:export :make-output))
 (in-package :calimero.output)
@@ -84,11 +86,17 @@
     ((array-data :elements xs) (output-array-elements xs))
     ((table-data :keys k :values v) (output-kv k v))))
 
+;; XXX move this somewhere else, so that all commands can be wrapped in a check like this
+;;     i.e. when we're folding all commands to build the pipeline
+(defcondition* closed-pipe-error (calimero-error)
+  ())
+
 ;; XXX maybe `make-output-to' should receive more "formal" data,
 ;;     and we should have an adapter so that it accepts :emit/:done from a pipe?
 (defun make-output-to (target)
   (bind (cur-array
          cur-coll
+         is-done
 
          ((:flet fits-array (e))
           (or (null cur-array)
@@ -118,6 +126,8 @@
           (print-flush-array)
           (print-flush-coll)))
     (lambda (&rest xs)
+      (when is-done
+        (error 'closed-pipe-error))
       (match xs
         ((list :emit (string-data :value x))
          (print-flush)
@@ -148,6 +158,7 @@
             (add-to-coll keys values))))
 
         ((list :done)
+         (setq is-done t)
          (print-flush))))))
 
 (defun make-output ()

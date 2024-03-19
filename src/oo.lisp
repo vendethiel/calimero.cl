@@ -1,5 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.myclass
+(defpackage :calimero.oo
   (:use :cl)
 
   (:import-from :alexandria #:alist-hash-table #:with-gensyms)
@@ -7,7 +7,7 @@
   (:import-from :nclasses #:define-class)
 
   (:import-from :calimero.util #:hash-table-merge-alist))
-(in-package :calimero.myclass)
+(in-package :calimero.oo)
 
 (cl-reexport:reexport-from :nclasses
                            :include

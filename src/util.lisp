@@ -4,6 +4,7 @@
 
   (:import-from :alexandria #:with-gensyms #:destructuring-case)
   (:import-from :serapeum #:find-keyword)
+  (:import-from :defstar)
 
   (:export #:dlambda #:delambda
            #:make-upcase-keyword
@@ -19,7 +20,7 @@
 (defun make-upcase-keyword (kw)
   (find-keyword (string-upcase kw)))
 
-; TODO defstar:*use-closer-mop?*
+(setf defstar:*use-closer-mop?* t)
 
 (defmacro dlambda (&body body)
   (with-gensyms ((data "data"))

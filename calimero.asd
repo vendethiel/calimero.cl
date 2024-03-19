@@ -37,7 +37,7 @@
   :components ((:module "src"
                         :serial t
                         :components ((:file "util")
-                                     (:file "myclass")
+                                     (:file "oo")
                                      (:file "error")
                                      (:file "data")
                                      (:file "command")

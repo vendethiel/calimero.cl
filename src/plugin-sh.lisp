@@ -4,9 +4,10 @@
 
   (:import-from :defstar #:defun*)
   (:import-from :alexandria-2 #:line-up-last)
+  (:import-from :serapeum :drop-prefix)
   (:import-from :uiop)
 
-  (:import-from :calimero.data #:string->data)
+  (:import-from :calimero.data #:string->data #:kv->data)
   (:import-from :calimero.command
                 #:make-simple-command #:make-nested-command
                 #:cmd #:cmd_
@@ -40,14 +41,18 @@
     (line-up-last
      file
      namestring
+     (drop-prefix (namestring dir))
      string->data
+     list
+     (kv->data (list "name")) ;; more info + wrap
      (funcall emit))))
 
 (defun* cmd-ls ((shell repl) parts)
-  (cmd_ (emit)
-    (if (null parts)
-        (list-directory (cwd shell) #'emit)
-        (emit (string->data "NYI")))))
+  (let ((keys))
+    (cmd_ (emit)
+      (if (null parts)
+          (list-directory (cwd shell) #'emit)
+          (emit (string->data "NYI"))))))
 
 (defun* cmd-cat ((shell repl) parts)
   (cmd (emit)

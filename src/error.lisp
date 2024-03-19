@@ -2,7 +2,7 @@
 (defpackage :calimero.error
   (:use :cl)
 
-  (:import-from :calimero.myclass #:defcondition* #:ahashmap)
+  (:import-from :calimero.oo #:defcondition* #:ahashmap)
 
   (:export :calimero-error :error-components))
 (in-package :calimero.error)
