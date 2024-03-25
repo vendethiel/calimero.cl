@@ -10,7 +10,7 @@
 (in-package :calimero.parse)
 
 (defun* parse ((part string))
-  :returns data
+  :returns 'data
   (handler-case
       (number->data (parse-integer part))
     (parse-error ()

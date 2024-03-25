@@ -95,7 +95,7 @@
    (print-arrays s (list v) :header k)))
 
 (defun* stringify (value)
-  :returns string
+  :returns 'string
   (match value
     ((string-data :value s) s)
     ((number-data :value n) (write-to-string n))
