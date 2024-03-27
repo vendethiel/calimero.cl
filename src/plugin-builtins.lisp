@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.plugin-builtins
-  (:use :cl)
-
+(uiop:define-package :calimero.plugin-builtins
   (:import-from :calimero.error )
   (:import-from :calimero.repl #:repl)
   (:import-from :calimero.plugin #:plugin)

@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.plugin
-  (:use :cl)
-
+(uiop:define-package :calimero.plugin
   (:import-from :calimero.oo #:defclass*)
   (:import-from :calimero.command #:command)
 

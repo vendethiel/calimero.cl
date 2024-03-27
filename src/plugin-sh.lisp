@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.plugin-sh
-  (:use :cl)
-
+(uiop:define-package :calimero.plugin-sh
   (:import-from :defstar #:defun*)
   (:import-from :alexandria-2 #:line-up-last)
   (:import-from :serapeum :drop-prefix)

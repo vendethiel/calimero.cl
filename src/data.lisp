@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.data
-  (:use :cl)
-
+(uiop:define-package :calimero.data
   (:import-from :defstar :defun*)
   (:import-from :trivial-types #:proper-list)
 

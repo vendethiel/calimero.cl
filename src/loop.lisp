@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.loop
-  (:use :cl)
-
+(uiop:define-package :calimero.loop
   (:import-from :uiop)
 
   (:import-from :calimero.oo #:make@)

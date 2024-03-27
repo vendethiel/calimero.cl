@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.command
-  (:use :cl)
-
+(uiop:define-package :calimero.command
   (:import-from :alexandria #:if-let #:with-gensyms #:proper-list-p #:last-elt)
   (:import-from :trivia #:match)
   (:import-from :metabang-bind #:bind)

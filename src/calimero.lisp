@@ -1,7 +1,5 @@
-
 (in-package :cl-user)
-(defpackage :calimero
-  (:use :cl)
+(uiop:define-package :calimero
   (:import-from :calimero.loop #:start-repl)
   (:export #:main))
 (in-package :calimero)

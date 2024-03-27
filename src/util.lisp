@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.util
-  (:use :cl)
-
+(uiop:define-package :calimero.util
   (:import-from :alexandria #:with-gensyms #:destructuring-case)
   (:import-from :serapeum #:find-keyword)
   (:import-from :defstar)

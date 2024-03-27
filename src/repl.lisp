@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.repl
-  (:use :cl)
-
+(uiop:define-package :calimero.repl
   (:import-from :trivial-types #:proper-list) ; alexandria:proper-list is more for debug purposes
   (:import-from :alexandria #:if-let)
   (:import-from :defstar #:defun*)

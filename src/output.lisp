@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.output
-  (:use :cl)
-
+(uiop:define-package :calimero.output
   (:import-from :trivia #:match)
   (:import-from :serapeum #:push-end #:op #:drop-suffix #:nest)
   (:import-from :defstar #:defun*)

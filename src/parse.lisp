@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.parse
-  (:use :cl)
-
+(uiop:define-package :calimero.parse
   (:import-from :defstar #:defun*)
 
   (:import-from :calimero.data #:data #:string->data #:number->data)

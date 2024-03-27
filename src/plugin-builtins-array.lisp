@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.plugin-builtins.array
-  (:use :cl)
-
+(uiop:define-package :calimero.plugin-builtins.array
   (:import-from :serapeum #:push-end)
   (:import-from :defstar #:defun*)
   (:import-from :trivia #:match)

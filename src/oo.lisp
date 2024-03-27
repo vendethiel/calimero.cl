@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.oo
-  (:use :cl)
-
+(uiop:define-package :calimero.oo
   (:import-from :alexandria #:alist-hash-table #:with-gensyms)
   (:import-from :serapeum #:lret)
   (:import-from :nclasses #:define-class)

@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.error
-  (:use :cl)
-
+(uiop:define-package :calimero.error
   (:import-from :calimero.oo #:defcondition* #:ahashmap)
 
   (:export :calimero-error :error-components))
@@ -10,9 +8,10 @@
 (defcondition* calimero-error (error)
   ())
 
+;; TODO :report that uses serapeum:pophash to extract what it can, and dump the other keys
+
+
 (defgeneric error-components (err)
   (:documentation "Returns the different parts of a calimero error")
   (:method-combination ahashmap))
-
-;; TODO explanation method that uses serapeum:pophash to extract what it can, and dump the other keys
 

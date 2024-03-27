@@ -1,7 +1,5 @@
 (in-package :cl-user)
-(defpackage :calimero.plugin-builtins.table
-  (:use :cl)
-
+(uiop:define-package :calimero.plugin-builtins.table
   (:import-from :serapeum #:op)
   (:import-from :defstar #:defun*)
   (:import-from :trivia #:match)
