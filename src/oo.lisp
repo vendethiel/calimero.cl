@@ -35,6 +35,7 @@
                             slots)))
 
 ;; XXX use serapeum:merge-tables?
+;; XXX copy the :before/:after impl from https://github.com/sbcl/specializable/blob/a08048ce874a2a8c58e4735d88de3bf3da0de052/src/accept-specializer/accept-specializer.lisp#L225-L229?
 (define-method-combination ahashmap (&optional (order ':most-specific-first))
   ((around (:around))
    (primary (ahashmap) :order order :required t))
