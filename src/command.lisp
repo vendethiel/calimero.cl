@@ -69,13 +69,13 @@
   ((message :type string)))
 
 (defmethod error-components ahashmap ((err command-error))
-  (list (cons :message (message err))))
+  (list (list :message (message err))))
 
 (defcondition* command-specific-error (command-error)
   ((command :type string)))
 
 (defmethod error-components ahashmap ((err command-specific-error))
-  (list (cons :command (command err))))
+  (list (list :command (command err))))
 
 ;; TODO command arity error
 

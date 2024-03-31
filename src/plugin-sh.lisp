@@ -25,7 +25,7 @@
   (if (not (null parts))
       (error 'command-specific-error
              :command "cwd"
-             :message "Cannot have arguments to `cwd'~%"))
+             :message "Cannot have arguments"))
   (cmd_ (emit)
     (line-up-last
      shell
@@ -62,7 +62,7 @@
   (if (not (null parts))
       (error 'command-specific-error
              :command "wc"
-             :message "Cannot have arguments to `wc'~%"))
+             :message "Cannot have arguments"))
   (let ((lines 0))
     (cmd (emit)
       (((list :emit data)

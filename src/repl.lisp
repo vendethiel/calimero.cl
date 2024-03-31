@@ -4,9 +4,9 @@
   (:import-from :alexandria #:if-let)
   (:import-from :defstar #:defun*)
 
-  (:import-from :calimero.oo #:defclass* #:defcondition*)
+  (:import-from :calimero.oo #:defclass* #:defcondition* #:ahashmap)
   (:import-from :calimero.data #:string->data #:string-value)
-  (:import-from :calimero.error #:calimero-error)
+  (:import-from :calimero.error #:calimero-error #:error-components)
   (:import-from :calimero.command #:handle-command)
   (:import-from :calimero.parse #:parse-line)
   (:import-from :calimero.output #:make-output)
@@ -24,8 +24,9 @@
 (defcondition* command-not-found (calimero-error)
   ())
 
-;;(defmethod error-components ahashmap ((err command-not-found))
-;;  )
+(defmethod error-components ahashmap ((err command-not-found))
+  (list (list :message "Command not found!")
+        (list :context "In a REPL command")))
 
 ; XXX stolen from the cookbook, try to see if that's available somewhere else.
 (defun prompt-new-value (prompt)

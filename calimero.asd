@@ -31,6 +31,7 @@
                #:cl-reexport ; Brings in `cl-reexport:reexport-from' that's useful for custom stdlib-like packages
                #:uiop ; Portable I/O functions
                #:cl-interpol
+               #:for
                )
 
   ;; Project stucture.

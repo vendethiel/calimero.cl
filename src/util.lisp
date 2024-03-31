@@ -12,7 +12,7 @@
 ;; XXX use serapeum:merge-tables + alexandria:alist-hash-table? (though that copies)
 (defun hash-table-merge-alist (table alist)
   (dolist (cons alist)
-    (setf (gethash (car cons) table) (cdr cons)))
+    (setf (gethash (car cons) table) (cadr cons)))
   table)
 
 (defun make-upcase-keyword (kw)
