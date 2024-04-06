@@ -25,8 +25,8 @@
   ())
 
 (defmethod error-components ahashmap ((err command-not-found))
-  (list (list :message "Command not found!")
-        (list :context "In a REPL command")))
+  '((:message "Command not found!")
+    (:context "In a REPL command")))
 
 ; XXX stolen from the cookbook, try to see if that's available somewhere else.
 (defun prompt-new-value (prompt)

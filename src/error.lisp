@@ -2,14 +2,15 @@
 (uiop:define-package :calimero.error
   (:import-from :serapeum #:pophash)
   (:import-from :for #:for)
+  (:import-from :named-readtables #:in-readtable)
 
+  (:import-from :calimero.util #:syntax)
   (:import-from :calimero.oo #:defcondition* #:ahashmap)
 
   (:export :calimero-error :error-components))
 (in-package :calimero.error)
 
-(named-readtables:in-readtable :interpol-syntax)
-
+(in-readtable syntax)
 
 (defcondition* calimero-error (error)
   ()
@@ -26,7 +27,7 @@
                   (format s "  ~a: ~a~%" k v))))))
 
 (defgeneric error-components (err)
-  (:documentation "Returns the different parts of a calimero error")
+  (:documentation "Returns the different parts of a calimero error as an alist. Not mutated.")
   (:method-combination ahashmap)
   (:method ahashmap ((err calimero-error))
     (list)))

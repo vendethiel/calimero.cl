@@ -3,8 +3,9 @@
   (:import-from :alexandria #:if-let #:with-gensyms #:proper-list-p #:last-elt)
   (:import-from :trivia #:match)
   (:import-from :metabang-bind #:bind)
+  (:import-from :named-readtables #:in-readtable)
 
-  (:import-from :calimero.util #:make-upcase-keyword)
+  (:import-from :calimero.util #:make-upcase-keyword #:syntax)
   (:import-from :calimero.oo #:defclass* #:make@ #:defcondition* #:ahashmap)
   (:import-from :calimero.error #:calimero-error #:error-components)
   (:import-from :calimero.data #:string-data #:string-value)
@@ -19,7 +20,7 @@
            :command-error :command-specific-error))
 (in-package :calimero.command)
 
-(cl-punch:enable-punch-syntax)
+(in-readtable syntax)
 
 (defclass* command ()
   ((name :type string)))
