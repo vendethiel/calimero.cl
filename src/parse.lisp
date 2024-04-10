@@ -4,7 +4,7 @@
 
   (:import-from :calimero.data #:data #:string->data #:number->data)
 
-  (:export :parse-line))
+  (:export #:parse-line))
 (in-package :calimero.parse)
 
 (defun* parse ((part string))

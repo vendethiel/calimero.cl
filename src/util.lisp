@@ -6,9 +6,9 @@
   (:import-from :cl-punch)
   (:import-from :defstar)
 
-  (:export :dlambda :delambda
-           :make-upcase-keyword
-           :hash-table-merge-alist :syntax))
+  (:export #:dlambda #:delambda
+           #:make-upcase-keyword
+           #:hash-table-merge-alist #:syntax))
 (in-package :calimero.util)
 
 (defreadtable syntax

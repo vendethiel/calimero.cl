@@ -8,7 +8,7 @@
   (:import-from :calimero.plugin-builtins.array #:make-array-builtins)
   (:import-from :calimero.plugin-builtins.table #:make-table-builtins)
 
-  (:export :make-plugin-builtins))
+  (:export #:make-plugin-builtins))
 (in-package :calimero.plugin-builtins)
 
 (defun make-handler ()

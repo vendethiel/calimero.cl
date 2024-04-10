@@ -14,7 +14,7 @@
                 #:cmd)
   (:import-from :calimero.repl #:repl)
 
-  (:export :make-table-builtins))
+  (:export #:make-table-builtins))
 (in-package :calimero.plugin-builtins.table)
 
 (defun* cmd-with-keys ((shell repl) parts)

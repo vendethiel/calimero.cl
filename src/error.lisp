@@ -7,7 +7,7 @@
   (:import-from :calimero.util #:syntax)
   (:import-from :calimero.oo #:defcondition* #:ahashmap)
 
-  (:export :calimero-error :error-components))
+  (:export #:calimero-error #:error-components))
 (in-package :calimero.error)
 
 (in-readtable syntax)

@@ -12,7 +12,7 @@
                 #:cmd #:cmd_)
   (:import-from :calimero.repl #:repl)
 
-  (:export :make-array-builtins))
+  (:export #:make-array-builtins))
 (in-package :calimero.plugin-builtins.array)
 
 (defun* single-number-arg (parts &optional cmd)

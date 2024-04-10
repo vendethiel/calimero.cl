@@ -5,11 +5,11 @@
 
   (:import-from :calimero.oo #:defclass* #:make@ #:defcondition*)
 
-  (:export :data
-           :string-data :string->data :string-value
-           :number-data :number->data :number-value
-           :array-data :array->data :array-elements
-           :table-data :kv->data))
+  (:export #:data
+           #:string-data #:string->data #:string-value
+           #:number-data #:number->data #:number-value
+           #:array-data #:array->data #:array-elements
+           #:table-data #:kv->data))
 (in-package :calimero.data)
 
 (defclass* data ()

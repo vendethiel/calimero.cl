@@ -10,14 +10,14 @@
   (:import-from :calimero.error #:calimero-error #:error-components)
   (:import-from :calimero.data #:string-data #:string-value)
 
-  (:export :command
-           :handle-command
-           :make-dynamic-command
-           :make-nested-command
-           :make-prefix-command
-           :make-simple-command
-           :cmd :cmd_
-           :command-error :command-specific-error))
+  (:export #:command
+           #:handle-command
+           #:make-dynamic-command
+           #:make-nested-command
+           #:make-prefix-command
+           #:make-simple-command
+           #:cmd #:cmd_
+           #:command-error #:command-specific-error))
 (in-package :calimero.command)
 
 (in-readtable syntax)

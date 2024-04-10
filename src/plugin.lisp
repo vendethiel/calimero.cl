@@ -3,7 +3,7 @@
   (:import-from :calimero.oo #:defclass*)
   (:import-from :calimero.command #:command)
 
-  (:export :plugin))
+  (:export #:plugin))
 (in-package :calimero.plugin)
 
 (defclass* plugin ()

@@ -15,7 +15,7 @@
                 #:table-data)
   (:import-from :calimero.error #:calimero-error)
 
-  (:export :make-output))
+  (:export #:make-output))
 (in-package :calimero.output)
 
 (defun transpose (xs)

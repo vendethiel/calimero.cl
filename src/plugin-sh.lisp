@@ -13,7 +13,7 @@
   (:import-from :calimero.plugin #:plugin)
   (:import-from :calimero.repl #:repl #:cwd)
 
-  (:export :make-plugin-sh))
+  (:export #:make-plugin-sh))
 (in-package :calimero.plugin-sh)
 
 (defun* cmd-echo ((shell repl) parts)
