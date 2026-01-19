@@ -18,6 +18,7 @@
 (in-package :calimero.plugin-builtins.table)
 
 (defun* cmd-with-keys ((shell repl) parts)
+  (declare (ignore shell))
   (unless (every (op (typep _ 'string-data)) parts)
     (error 'command-specific-error
            :command "table with-keys"
@@ -29,6 +30,7 @@
         (emit (kv->data keys values)))))))
 
 (defun* cmd-get ((shell repl) parts)
+  (declare (ignore shell))
   (let ((key (match parts
                ((list (string-data :value s)) s)
                ((list*) (error 'command-specific-error

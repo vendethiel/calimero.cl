@@ -23,7 +23,7 @@
 (in-readtable syntax)
 
 (defclass* command ()
-  ((name :type string)))
+  ((name :type (or null string))))
 
 (defclass* dynamic-command (command)
   ((handler)))
@@ -32,14 +32,17 @@
   (make@ 'dynamic-command (name handler)))
 
 (defclass* nested-command (command)
-  ((subcommands :type (proper-list command))))
+  ((subcommands :type (proper-list command)
+                :initform (error "nested-command's :subcommands cannot be nil"))))
 
 (defun make-nested-command (name subcommands)
   (make@ 'nested-command (name subcommands)))
 
 (defclass* prefix-command (command)
-  ((prefix :type string)
-   (subcommand :type command)))
+  ((prefix :type string
+           :initform (error "prefix-command's :prefix cannot be nil"))
+   (subcommand :type command
+               :initform (error "prefix-command's :subcommand cannot be nil"))))
 
 (defun make-prefix-command (name prefix subcommand)
   (make@ 'prefix-command (name prefix subcommand)))
