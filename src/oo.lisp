@@ -1,7 +1,7 @@
 (in-package :cl-user)
 (uiop:define-package :calimero.oo
   (:import-from :alexandria #:alist-hash-table #:with-gensyms)
-  (:import-from :serapeum #:lret)
+  (:import-from :serapeum #:lret #:find-keyword)
   (:import-from :nclasses #:define-class)
 
   (:import-from :calimero.util #:hash-table-merge-alist))
@@ -22,14 +22,12 @@
                                (:predicate-name-transformer 'nclasses:always-dashed-predicate-name-transformer))
                              options)))
 
-(defun make-keyword (name) (values (intern (string-upcase name) "KEYWORD")))
-
 (defmacro make@ (class &body slots)
   `(make-instance ,class
                   ,@(mapcan (lambda (slot)
                               (if (consp slot)
                                   ; TODO check if it's if/when/unless or something
-                                  (mapcan (lambda (w) (list (make-keyword w) w))
+                                  (mapcan (lambda (w) (list (find-keyword w) w))
                                           slot)
                                   (list slot)))
                             slots)))
