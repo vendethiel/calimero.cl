@@ -18,8 +18,9 @@
 ;(use-syntax punch-syntax)
 
 (defclass* repl ()
-  ((plugins nil :type (proper-list plugin))
-   (cwd :type pathname)))
+  ((plugins nil :type (or nil (proper-list plugin)))
+   (cwd :type pathname
+        :initform (error "repl's :cwd cannot be nil"))))
 
 (defcondition* command-not-found (calimero-error)
   ())

@@ -20,6 +20,7 @@
 
 (defclass* string-data (data)
   ((value :type string
+          :initform (error "string-data's :value cannot be nil")
           :reader string-value)))
 
 (defun* string->data ((value string))
@@ -28,6 +29,7 @@
 
 (defclass* number-data (data)
   ((value :type number
+          :initform (error "number-data's :value cannot be nil")
           :reader number-value)))
 
 (defun* number->data ((value number))

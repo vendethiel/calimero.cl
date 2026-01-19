@@ -17,6 +17,7 @@
 (in-package :calimero.plugin-sh)
 
 (defun* cmd-echo ((shell repl) parts)
+  (declare (ignore shell))
   (cmd_ (emit)
     (dolist (part parts)
       (emit part))))
@@ -53,11 +54,13 @@
           (emit (string->data "NYI"))))))
 
 (defun* cmd-cat ((shell repl) parts)
+  (declare (ignore shell))
   (cmd (emit)
     (((list :emit data)
       (emit data)))))
 
 (defun* cmd-wc ((shell repl) parts)
+  (declare (ignore shell))
   ;; TODO options
   (if (not (null parts))
       (error 'command-specific-error

@@ -7,7 +7,10 @@
 (in-package :calimero.plugin)
 
 (defclass* plugin ()
-  ((name :type string)
-   (description :type string)
-   (handler :type command)))
+  ((name :type string
+         :initform (error "plugin's :name cannot be nil"))
+   (description :type string
+                :initform (error "plugin's :description cannot be nil"))
+   (handler :type command
+         :initform (error "plugin's :handler cannot be nil"))))
 
