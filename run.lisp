@@ -15,7 +15,7 @@ Another solution to run the app is to build and run a binary (see README).
 
 (load "calimero.asd")
 
-(ql:quickload "calimero")
+(asdf:load-system "calimero")
 
 (in-package :calimero)
 (main)

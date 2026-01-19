@@ -1,4 +1,6 @@
+(require "asdf")
 (in-package :asdf-user)
+
 (defsystem "calimero-tests"
   :description "Test suite for the calimero system"
   :author "vendethiel <vendethiel@hotmail.fr>"

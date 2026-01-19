@@ -1,5 +1,23 @@
 {
   "nodes": {
+    "autoload-repo": {
+      "flake": false,
+      "locked": {
+        "dir": "autoload",
+        "lastModified": 1768221267,
+        "narHash": "sha256-qbvXCoVIT+MaRg4KeAgMR1XXvovttDsGOlov3OzxI1s=",
+        "owner": "melisgl",
+        "repo": "mgl-pax",
+        "rev": "4614ff0bf434645473b0d8e7a50d2ca25741e299",
+        "type": "github"
+      },
+      "original": {
+        "dir": "autoload",
+        "owner": "melisgl",
+        "repo": "mgl-pax",
+        "type": "github"
+      }
+    },
     "cl-nix-lite": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -55,6 +73,22 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "named-readtables-repo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1768217598,
+        "narHash": "sha256-asnh28YW6sD5mekDTpbvvSNoqag9ISUN+3Je+EK4LjU=",
+        "owner": "melisgl",
+        "repo": "named-readtables",
+        "rev": "aa6dab55abff3cca26b976d9a105c2006ca0c3b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "melisgl",
+        "repo": "named-readtables",
         "type": "github"
       }
     },
@@ -122,8 +156,10 @@
     },
     "root": {
       "inputs": {
+        "autoload-repo": "autoload-repo",
         "cl-nix-lite": "cl-nix-lite",
         "flake-utils": "flake-utils",
+        "named-readtables-repo": "named-readtables-repo",
         "nixpkgs": "nixpkgs_3"
       }
     },
