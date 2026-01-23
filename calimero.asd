@@ -1,3 +1,4 @@
+(require "asdf")
 (in-package :asdf-user)
 
 (defsystem "calimero"
@@ -18,7 +19,7 @@
                #:trivial-types ; More types
                #:defstar ; Proper typed definitions <https://github.com/lisp-maintainers/defstar>
                #:nclasses
-               #:fn ; Lambda macros
+               ;#:fn ; Lambda macros
                #:for ; Iteration library <https://shinmera.github.io/for>
                ; #:fset ; Collection library <http://www.ergy.com/FSet.html>
                #:modf ; Immutable updates <https://github.com/smithzvk/modf>

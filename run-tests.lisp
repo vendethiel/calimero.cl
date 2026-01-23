@@ -1,8 +1,8 @@
-
+(require "asdf")
 (load "calimero.asd")
 (load "calimero-tests.asd")
 
-(ql:quickload "calimero-tests")
+(asdf:load-system "calimero-tests")
 
 (in-package :calimero-tests)
 
